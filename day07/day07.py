@@ -6,7 +6,7 @@ def load_data(file):
     return data
 
 
-def build_dir_tree(input_data: str):
+def build_dir_tree(input_data: list[str]):
     root = {}
     # dir -> dict
     # file -> int
@@ -35,20 +35,32 @@ def build_dir_tree(input_data: str):
     return root
 
 
-def calc_size(tree, size_list):
-    if type(tree) == 'str':
-        pass
-    if type(tree) == 'list':
-        pass
+def calc_node_size(node, name, size_dict):
+    size = 0
+    if type(node) is str:
+        size = int(node)
+    elif type(node) is dict:
+        for n in node:
+            child_size = calc_node_size(node[n], n, size_dict)
+            size += child_size
+        size_dict[name] = size
 
-    return size_list
+    return size
 
 
 def part1(file):
     tree = build_dir_tree(load_data(file))
-    print(tree)
+    size_dict = {}
+    # print(tree)
+    calc_node_size(tree, name='/', size_dict=size_dict)
+    # print(size_dict)
 
-    return tree
+    result = 0
+    for dir_node in size_dict:
+        if size_dict[dir_node] <= 100000:
+            result += size_dict[dir_node]
+
+    return result
 
 
 def part2():
