@@ -41,9 +41,10 @@ def calc_node_size(node, name, size_dict):
         size = int(node)
     elif type(node) is dict:
         for n in node:
-            child_size = calc_node_size(node[n], n, size_dict)
+            full_name = " ".join([name, n])
+            child_size = calc_node_size(node[n], full_name, size_dict)
             size += child_size
-        size_dict[name] = size
+        size_dict[full_name] = size
 
     return size
 
@@ -68,5 +69,5 @@ def part2():
 
 
 if __name__ == '__main__':
-    print(f'Part 1: {part1("example.txt")}')
+    print(f'Part 1: {part1("input.txt")}')
     assert part1('example.txt') == 95437
