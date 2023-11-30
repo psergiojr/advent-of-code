@@ -1,3 +1,3 @@
-# advent of code 2022
+# Advent of Code
 
-My solutions in Python.
+My solutions for Advent of Code since 2022. Mostly in Python.
