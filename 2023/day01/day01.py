@@ -1,74 +1,51 @@
-def load_data(file_path: str):
-    data = []
+numbers = {
+    'one'  : '1',
+    'two'  : '2',
+    'three': '3',
+    'four' : '4',
+    'five' : '5',
+    'six'  : '6',
+    'seven': '7',
+    'eight': '8',
+    'nine' : '9',
+}
+
+def parse_calibration_values(file_path: str, check_text: bool = False) -> int:
+    calibration_values = []
+    
     with open(file_path, 'r') as f:
-        data = f.readlines()
-    return data
+        for line in f:
+            digits = []
+            buffer = '     '
+            for char in line:
+                if char.isdigit():
+                    digits.append(char)
+                    # resetting the buffer
+                    buffer = '     '
+                    
+                elif check_text:
+                    buffer = buffer[1:] + char
+                    for i in (3, 4, 5):
+                        if buffer[-i:] in numbers:
+                            digits.append(numbers[buffer[-i:]])
+                            break
 
-def part1(file_path: str):
-    lines = load_data(file_path)
-    calibration_values = []
-
-    for line in lines:
-        first_digit: int = None
-        last_digit: int = None
-        for letter in line:
-            if letter.isdigit():
-                if not first_digit: first_digit = letter
-                last_digit = letter
-        calibration_values.append(int(first_digit + last_digit))
-
+            calibration_values.append(int(digits[0] + digits[-1]))
+    
     return sum(calibration_values)
 
-def part2(file_path: str):
-    lines = load_data(file_path)
-    numbers = {
-        'one'  : '1',
-        'two'  : '2',
-        'three': '3',
-        'four' : '4',
-        'five' : '5',
-        'six'  : '6',
-        'seven': '7',
-        'eight': '8',
-        'nine' : '9',
-    }
-    calibration_values = []
 
-    for line in lines:
-        first_digit: int = None
-        last_digit: int = None
-        number_buffer: str = '     '
-        for letter in line:
-            if letter.isdigit():
-                if not first_digit: first_digit = letter
-                last_digit = letter
-                # reset number buffer
-                number_buffer = '     '
-            else:
-                number_buffer = number_buffer[1:] + letter
-                # print(number_buffer)
-                num = None
+def part1(file_path: str) -> int:
+    return parse_calibration_values(file_path)
 
-                if number_buffer[-3:] in numbers:
-                    num = numbers[number_buffer[-3:]]
-                elif number_buffer[-4:] in numbers:
-                    num = numbers[number_buffer[-4:]]
-                elif number_buffer in numbers:
-                    num = numbers[number_buffer]
-                
-                # print(f'Number found: {num}')
-                if num:
-                    if not first_digit: first_digit = num
-                    last_digit = num
-        
-        calibration_values.append(int(first_digit + last_digit))
-    # print(calibration_values)
-    return sum(calibration_values)
+
+def part2(file_path: str) -> int:
+    return parse_calibration_values(file_path, check_text=True)
 
 
 if __name__ == '__main__':
     print(f'Part 1: {part1("input.txt")}')
-    assert(part1('example1.txt') == 142)
+    assert part1('example1.txt') == 142
 
     print(f'Part 2: {part2("input.txt")}')
-    assert(part2('example2.txt') == 281)
+    assert part2('example2.txt') == 281
